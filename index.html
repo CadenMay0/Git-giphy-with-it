@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Git giphy with it.</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="">
+    <script src="buttonscript.js"></script>
+</head>
+<body>
+    <div id="buttons">
+
+    </div>
+    <div>
+        <span>Add a button</span>
+        <input type="text" id="button-input">
+        <button id="addOption">Click here!</button>
+    </div>
+    <div id="gifs"></div>
+    <script>
+        loadButtons();
+
+
+        //function addButton() {
+        $("#addOption").on("click", function () {
+            console.log("hello2");
+            // var newButton = $("<button>");
+            var newTag = $("#button-input").val();
+            tag.push(newTag);
+            //newButton.html(newTag);
+            //newButton.attr("data-tag", newTag);
+            //$(newButton).appendTo("#buttons");
+            loadButtons();
+        });
+        //};
+
+        //function displayGifs() {
+        $(".gifButton").on("click", function () {
+            console.log("meow");
+            var gifTag = $(this).attr("data-tag");
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" +
+                gifTag + "&api_key=dc6zaTOxFJmzC&limit=10&rating=pg";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).done(function (response) {
+                var results = response.data;
+                for (var i = 0; i < results.length; i++) {
+                    var gifDiv = $("<div class='item'>");
+
+                    var rating = results[i].rating;
+
+                    var p = $("<p>").text("Rating: " + rating);
+
+                    var tagImage = $("<img>");
+                    tagImage.attr("src", results[i].images.fixed_height_still.url);
+                    tagImage.attr("data-state", "still");
+                    tagImage.attr("data-still", results[i].images.fixed_height_still.url);
+                    tagImage.attr("data-animate", results[i].images.fixed_height.url);
+                    tagImage.attr("class", "gif");
+
+                    gifDiv.prepend(p);
+                    gifDiv.prepend(tagImage);
+
+                    $("#gifs").prepend(gifDiv);
+                }
+            });
+        });
+        //};
+
+        //function changeState() {
+        $(".gif").on("click",function () {
+
+            var state = $(this).attr("data-state");
+
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+            }
+            else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+            }
+        });
+//}
+    </script>
+</body>
+</html>
